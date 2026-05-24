@@ -4,6 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
 
+export default function AdminDashboard() {
   const [stats, setStats] = useState({ total: 0, sold: 0, inquiries: 0, reviews: 0 });
   const [loading, setLoading] = useState(true);
 

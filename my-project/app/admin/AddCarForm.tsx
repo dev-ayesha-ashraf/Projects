@@ -11,7 +11,13 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -128,9 +134,10 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
           <input name="mileage" placeholder="e.g. 15000" value={form.mileage} onChange={handleChange} required type="number" className={inputClasses} />
         </div>
 
+
         <div>
           <label className={labelClasses}>Transmission *</label>
-          <select name="transmission" value={form.transmission} onChange={handleChange} required className={`${inputClasses} cursor-pointer`}>
+          <select name="transmission" value={form.transmission} onChange={handleSelectChange} required className={`${inputClasses} cursor-pointer`}>
             <option value="" disabled className="text-gray-500">Select Transmission</option>
             <option value="Automatic">Automatic</option>
             <option value="Manual">Manual</option>
@@ -138,9 +145,10 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
           </select>
         </div>
 
+
         <div>
           <label className={labelClasses}>Fuel Type *</label>
-          <select name="fuel_type" value={form.fuel_type} onChange={handleChange} required className={`${inputClasses} cursor-pointer`}>
+          <select name="fuel_type" value={form.fuel_type} onChange={handleSelectChange} required className={`${inputClasses} cursor-pointer`}>
             <option value="" disabled className="text-gray-500">Select Fuel Type</option>
             <option value="Petrol">Petrol</option>
             <option value="Diesel">Diesel</option>
@@ -159,9 +167,10 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
           <input name="color" placeholder="e.g. Shadow Black" value={form.color} onChange={handleChange} className={inputClasses} />
         </div>
 
+
         <div>
           <label className={labelClasses}>Condition *</label>
-          <select name="condition" value={form.condition} onChange={handleChange} required className={`${inputClasses} cursor-pointer`}>
+          <select name="condition" value={form.condition} onChange={handleSelectChange} required className={`${inputClasses} cursor-pointer`}>
             <option value="" disabled className="text-gray-500">Select Condition</option>
             <option value="Brand New">Brand New</option>
             <option value="Excellent">Excellent</option>

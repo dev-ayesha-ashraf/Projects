@@ -4,49 +4,31 @@ import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
 export default function AdminInquiries() {
-  const [contacts, setContacts] = useState<any[]>([]);
+  type Contact = {
+    id: string;
+    name: string;
+    email: string;
+    message: string;
+    status: string;
+    reply?: string;
+    created_at?: string;
+    [key: string]: any;
+  };
+
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState<{ [id: string]: string }>({});
 
-
-    type Contact = {
-      id: string;
-      name: string;
-      email: string;
-      message: string;
-      status: string;
-      reply?: string;
-      created_at?: string;
-      [key: string]: any;
-    };
-
-    const [contacts, setContacts] = useState<Contact[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [reply, setReply] = useState<{ [id: string]: string }>({});
-
-    const fetchContacts = async () => {
-      setLoading(true);
-      const { data, error } = await supabase.from('contact').select('*').order('created_at', { ascending: false });
-      if (!error) setContacts(data || []);
-      setLoading(false);
-    };
-
-    useEffect(() => {
-      fetchContacts();
-    }, []);
-                    {contacts.map((contact: Contact) => (
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message || 'Error updating car details');
-        } else {
-          setError('Error updating car details');
-        }
   const fetchContacts = async () => {
     setLoading(true);
     const { data, error } = await supabase.from('contact').select('*').order('created_at', { ascending: false });
     if (!error) setContacts(data || []);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   const handleReply = async (id: string) => {
     const text = reply[id];
