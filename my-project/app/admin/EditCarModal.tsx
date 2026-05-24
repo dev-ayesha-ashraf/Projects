@@ -1,17 +1,43 @@
 "use client";
 import { useState } from 'react';
 
-export default function EditCarModal({ car, onClose, onSave }: { car: any, onClose: () => void, onSave: (updated: any) => void }) {
+type Car = {
+  title: string;
+  brand: string;
+  model: string;
+  year: string | number;
+  price: string | number;
+  mileage: string | number;
+  transmission: string;
+  fuel_type: string;
+  engine_capacity?: string;
+  color?: string;
+  condition: string;
+  status: string;
+  contact_phone?: string;
+  contact_email?: string;
+  features: string[];
+  description?: string;
+  [key: string]: any;
+};
+
+interface EditCarModalProps {
+  car: Car;
+  onClose: () => void;
+  onSave: (updated: Car) => void;
+}
+
+export default function EditCarModal({ car, onClose, onSave }: EditCarModalProps) {
   const [form, setForm] = useState({ ...car, features: car.features ? car.features.join(', ') : '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setForm((prev: any) => ({ ...prev, [name]: value }));
+    setForm((prev: typeof form) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -19,8 +45,12 @@ export default function EditCarModal({ car, onClose, onSave }: { car: any, onClo
       const featuresArr = form.features.split(',').map((f: string) => f.trim()).filter(Boolean);
       await onSave({ ...form, features: featuresArr });
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Error updating car details');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'Error updating car details');
+      } else {
+        setError('Error updating car details');
+      }
     }
     setLoading(false);
   };

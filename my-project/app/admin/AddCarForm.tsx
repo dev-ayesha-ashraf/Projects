@@ -11,39 +11,37 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e: any) => {
-    setImageFiles(Array.from(e.target.files));
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImageFiles(Array.from(e.target.files));
+    }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess(false);
     try {
       // Upload images to Supabase Storage
-      let imageUrls: string[] = [];
+      const imageUrls: string[] = [];
       for (const file of imageFiles) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const { data, error: uploadError } = await supabase.storage
           .from('car-images')
           .upload(`cars/${fileName}`, file);
-          
         if (uploadError) throw uploadError;
-        
         const url = supabase.storage.from('car-images').getPublicUrl(data.path).data.publicUrl;
         imageUrls.push(url);
       }
-      
       // Prepare features as array
       const featuresArr = form.features.split(',').map((f) => f.trim()).filter(Boolean);
-      
       // Insert car
       const { error: insertError } = await supabase.from('cars').insert([
         { 
@@ -57,9 +55,7 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
           date_added: new Date().toISOString()
         }
       ]);
-      
       if (insertError) throw insertError;
-      
       setForm({ 
         title: '', brand: '', model: '', year: '', price: '', mileage: '', transmission: '', 
         fuel_type: '', engine_capacity: '', color: '', condition: '', features: '', 
@@ -68,8 +64,12 @@ export default function AddCarForm({ onCarAdded }: { onCarAdded: () => void }) {
       setImageFiles([]);
       setSuccess(true);
       setTimeout(() => onCarAdded(), 1000);
-    } catch (err: any) {
-      setError(err.message || 'Error adding car listing');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'Error adding car listing');
+      } else {
+        setError('Error adding car listing');
+      }
     }
     setLoading(false);
   };

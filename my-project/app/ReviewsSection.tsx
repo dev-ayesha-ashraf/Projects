@@ -1,8 +1,23 @@
 "use client";
 import React from 'react';
 
-export default function ReviewsSection({ reviews = [], loading = false }) {
-  const featuredReviews = reviews.filter((r: any) => r.is_featured);
+type Review = {
+  id: string;
+  customer_name: string;
+  rating: number;
+  review_text: string;
+  created_at?: string;
+  is_featured?: boolean;
+  reply?: string;
+};
+
+interface ReviewsSectionProps {
+  reviews?: Review[];
+  loading?: boolean;
+}
+
+export default function ReviewsSection({ reviews = [], loading = false }: ReviewsSectionProps) {
+  const featuredReviews = reviews.filter((r: Review) => r.is_featured);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6 my-24 animate-fade-in-up">
@@ -31,7 +46,7 @@ export default function ReviewsSection({ reviews = [], loading = false }) {
         </div>
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {featuredReviews.map((review: any) => (
+          {featuredReviews.map((review: Review) => (
             <div 
               key={review.id} 
               className="glass-card rounded-2xl p-8 flex flex-col justify-between border border-white/5 relative group"
@@ -50,7 +65,7 @@ export default function ReviewsSection({ reviews = [], loading = false }) {
 
                 {/* Review Text */}
                 <p className="text-gray-300 text-sm italic leading-relaxed mb-6">
-                  "{review.review_text}"
+                  &quot;{review.review_text}&quot;
                 </p>
               </div>
 

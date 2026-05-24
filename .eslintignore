@@ -1,0 +1,17 @@
+# Ignore all ESLint cache and reports
+.eslintcache
+eslint-report.*
+
+# Ignore all lint errors and warnings (not recommended for production)
+# Uncomment the next line to ignore all linting
+# .eslintignore
+
+# Example: Ignore all files (not recommended)
+# *
+
+# Example: Ignore specific folders or files
+# node_modules/
+# build/
+# dist/
+# out/
+# .next/

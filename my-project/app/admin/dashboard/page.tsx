@@ -3,13 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function AdminDashboard() {
+
   const [stats, setStats] = useState({ total: 0, sold: 0, inquiries: 0, reviews: 0 });
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
 
   const fetchStats = async () => {
     setLoading(true);
@@ -31,6 +27,10 @@ export default function AdminDashboard() {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   return (
     <div className="bg-primary text-white min-h-screen py-16 px-6 font-[Poppins] animate-fade-in">
